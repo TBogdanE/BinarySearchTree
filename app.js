@@ -80,9 +80,7 @@ class Tree {
         //case 3: delete a node with both childrens in bst
       } else {
         const succesor = this.findMinimum(currentNode.right);
-        console.log("before", currentNode.value);
         currentNode.value = succesor.value;
-        console.log("after", currentNode.value);
         this.remove(succesor.value, currentNode.right);
       }
       return currentNode;
@@ -98,6 +96,22 @@ class Tree {
       this.remove(value, currentNode, previousNode);
     }
   }
+
+  find(value, node = this.root) {
+    if (node === null) {
+      return;
+    }
+
+    if (value !== node.value) {
+      if (value > node.value) {
+        return this.find(value, node.right);
+      } else {
+        return this.find(value, node.left);
+      }
+    }
+    console.log("Node found:", node);
+    return;
+  }
 }
 
 const tree = new Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
@@ -112,3 +126,4 @@ tree.insert(322);
 prettyPrint(tree.root);
 tree.remove(324);
 prettyPrint(tree.root);
+tree.find(6345);
