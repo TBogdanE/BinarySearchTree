@@ -32,6 +32,13 @@ class Tree {
     return arr;
   }
 
+  findMinimum(node) {
+    while (node.left !== null) {
+      node = node.left;
+    }
+    return node;
+  }
+
   insert(value, root = this.root) {
     if (root === null) {
       return new Node(value);
@@ -72,7 +79,13 @@ class Tree {
 
         //case 3: delete a node with both childrens in bst
       } else {
+        const succesor = this.findMinimum(currentNode.right);
+        console.log("before", currentNode.value);
+        currentNode.value = succesor.value;
+        console.log("after", currentNode.value);
+        this.remove(succesor.value, currentNode.right);
       }
+      return currentNode;
     }
 
     if (currentNode.value > value) {
@@ -92,7 +105,10 @@ tree.insert(17);
 tree.insert(18);
 tree.insert(16);
 tree.insert(323);
+tree.insert(330);
+tree.insert(335);
+tree.insert(326);
 tree.insert(322);
 prettyPrint(tree.root);
-tree.remove(6345);
+tree.remove(324);
 prettyPrint(tree.root);
