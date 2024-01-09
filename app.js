@@ -12,25 +12,11 @@ class Tree {
   constructor(arr) {
     this.root = this.buildTree(arr);
   }
-
-  sortAndRemoveDuplicates(array) {
-    const arr = [...new Set(array)].sort((a, b) => a - b);
-    //console.log("array:", arr);
-    return arr;
-  }
-
   buildTree(arr) {
     let sorted = this.sortAndRemoveDuplicates(arr);
     let mid = Math.floor(sorted.length / 2);
 
     if (sorted.length === 0) return null;
-
-    /*console.log(
-      `Sorted array: ${sorted}\n Mid: ${sorted[mid]}\n Left: ${sorted.slice(
-        0,
-        mid
-      )}\n Right: ${sorted.slice(mid + 1)}\n\n`
-    );*/
 
     const root = new Node(
       sorted[mid],
@@ -39,6 +25,11 @@ class Tree {
     );
 
     return root;
+  }
+
+  sortAndRemoveDuplicates(array) {
+    const arr = [...new Set(array)].sort((a, b) => a - b);
+    return arr;
   }
 
   insert(value, root = this.root) {
@@ -53,10 +44,55 @@ class Tree {
     }
     return root;
   }
+
+  remove(value, currentNode = this.root, previousNode = null) {
+    if (currentNode == null) return currentNode;
+
+    if (currentNode.value === value) {
+      //case 1: delete a leaf
+      if (currentNode.left == null && currentNode.right == null) {
+        if (previousNode.right == currentNode) {
+          previousNode.right = null;
+        } else {
+          previousNode.left = null;
+        }
+        //case 2: delete a node with single child in bst
+      } else if (currentNode.left === null) {
+        if (previousNode.right == currentNode) {
+          previousNode.right = currentNode.right;
+        } else {
+          previousNode.left = currentNode.right;
+        }
+      } else if (currentNode.right === null) {
+        if (previousNode.right == currentNode) {
+          previousNode.right = currentNode.left;
+        } else {
+          previousNode.left = currentNode.left;
+        }
+
+        //case 3: delete a node with both childrens in bst
+      } else {
+      }
+    }
+
+    if (currentNode.value > value) {
+      previousNode = currentNode;
+      currentNode = currentNode.left;
+      this.remove(value, currentNode, previousNode);
+    } else {
+      previousNode = currentNode;
+      currentNode = currentNode.right;
+      this.remove(value, currentNode, previousNode);
+    }
+  }
 }
 
 const tree = new Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]);
 tree.insert(17);
 tree.insert(18);
 tree.insert(16);
+tree.insert(323);
+tree.insert(322);
+prettyPrint(tree.root);
+tree.remove(6345);
 prettyPrint(tree.root);
