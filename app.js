@@ -63,6 +63,7 @@ class Tree {
         } else {
           previousNode.left = null;
         }
+        
         //case 2: delete a node with single child in bst
       } else if (currentNode.left === null) {
         if (previousNode.right == currentNode) {
@@ -99,7 +100,7 @@ class Tree {
 
   find(value, node = this.root) {
     if (node === null) {
-      return;
+      return null;
     }
 
     if (value !== node.value) {
