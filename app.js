@@ -63,7 +63,7 @@ class Tree {
         } else {
           previousNode.left = null;
         }
-        
+
         //case 2: delete a node with single child in bst
       } else if (currentNode.left === null) {
         if (previousNode.right == currentNode) {
@@ -110,8 +110,83 @@ class Tree {
         return this.find(value, node.left);
       }
     }
-    console.log("Node found:", node);
-    return;
+    return node;
+  }
+
+  levelOrder(callback) {
+    if (!this.root) return [];
+
+    let queque = [this.root];
+    let results = [];
+
+    while (queque.length) {
+      let node = queque.shift();
+      results.push(node.value);
+      if (node.left) queque.push(node.left);
+      if (node.right) queque.push(node.right);
+      if (callback) callback(node);
+    }
+    if (!callback) {
+      console.log(results);
+      return results;
+    }
+  }
+
+  // left -> root -> right
+  inOrder(root = this.root, arr = [], callback) {
+    if (root === null) return;
+
+    if (root.left) this.inOrder(root.left, arr, callback);
+    if (!callback) arr.push(root.value);
+    if (root.right) this.inOrder(root.right, arr, callback);
+    return arr;
+  }
+  //root -> left -> right
+  preOrder(root = this.root, arr = [], callback) {
+    if (root === null) return;
+
+    if (!callback) arr.push(root.value);
+    if (root.left) this.preOrder(root.left, arr, callback);
+    if (root.right) this.preOrder(root.right, arr, callback);
+
+    return arr;
+  }
+
+  //left -> right -> root
+  postOrder(root = this.root, arr = [], callback) {
+    if (root === null) return;
+
+    if (root.left) this.postOrder(root.left, arr, callback);
+    if (root.right) this.postOrder(root.right, arr, callback);
+    if (!callback) arr.push(root.value);
+
+    return arr;
+  }
+
+  height(value, root = this.root) {
+    if (root === null) return -1;
+
+    if (root === this.root) root = this.find(value);
+
+    const left = this.height(value, root.left);
+    const right = this.height(value, root.right);
+    const distance = Math.max(left, right) + 1;
+    return distance;
+  }
+
+  depth(value, node = this.root, count = 0) {
+    if (node === null) return -1;
+
+    count += 1;
+
+    if (value !== node.value) {
+      if (value > node.value) {
+        return this.depth(value, node.right, count);
+      } else {
+        return this.depth(value, node.left, count);
+      }
+    }
+    return count;
   }
 }
 
@@ -125,6 +200,12 @@ tree.insert(335);
 tree.insert(326);
 tree.insert(322);
 prettyPrint(tree.root);
-tree.remove(324);
+//tree.remove(324);
 prettyPrint(tree.root);
-tree.find(6345);
+tree.levelOrder();
+console.log(tree.inOrder());
+console.log(tree.preOrder());
+console.log(tree.postOrder());
+console.log("Node found:", tree.find(6345));
+console.log("Height of the node:", tree.height(8));
+console.log("Depth of the node:", tree.depth(6345));
